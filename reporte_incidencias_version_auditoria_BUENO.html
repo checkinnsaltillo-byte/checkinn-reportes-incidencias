@@ -1,0 +1,1510 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Reporte de incidencias de limpieza</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --line: #d9e1ec;
+      --text: #1f2937;
+      --muted: #6b7280;
+      --accent: #2563eb;
+      --accent-2: #1d4ed8;
+      --ok: #16a34a;
+      --warn: #d97706;
+      --danger: #dc2626;
+      --shadow: 0 10px 30px rgba(15, 23, 42, 0.08);
+      --radius: 18px;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Arial, Helvetica, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+    }
+
+    .wrap {
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .header {
+      margin-bottom: 18px;
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: flex-start;
+    }
+
+    .header h1 {
+      margin: 0 0 6px;
+      font-size: 28px;
+    }
+
+    .header p {
+      margin: 0;
+      color: var(--muted);
+      max-width: 780px;
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .layout {
+      display: grid;
+      grid-template-columns: 520px minmax(0, 1fr);
+      gap: 20px;
+      align-items: start;
+    }
+
+    .card {
+      background: var(--card);
+      border: 1px solid var(--line);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+
+    .form-card {
+      padding: 18px;
+      position: sticky;
+      top: 14px;
+    }
+
+    .report-card {
+      padding: 22px;
+      min-height: 85vh;
+    }
+
+    h2 {
+      margin: 0 0 12px;
+      font-size: 18px;
+    }
+
+    .section {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 14px;
+      margin-bottom: 14px;
+      background: #fbfcfe;
+    }
+
+    .section-title {
+      font-size: 14px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #111827;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+
+    .grid-1 { display: grid; gap: 12px; }
+
+    label {
+      display: block;
+      font-size: 13px;
+      font-weight: bold;
+      margin-bottom: 6px;
+    }
+
+    input[type="text"],
+    input[type="date"],
+    input[type="file"],
+    textarea,
+    select {
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 10px 12px;
+      font-size: 14px;
+      background: white;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 84px;
+    }
+
+    .checkbox-list {
+      display: grid;
+      gap: 8px;
+      max-height: 180px;
+      overflow: auto;
+      border: 1px solid #cbd5e1;
+      background: white;
+      border-radius: 12px;
+      padding: 10px;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+    }
+
+    .inline {
+      display: flex;
+      gap: 8px;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .inline input[type="text"] {
+      flex: 1;
+      min-width: 160px;
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 12px;
+    }
+
+    button {
+      border: 0;
+      border-radius: 12px;
+      padding: 11px 14px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 14px;
+    }
+
+    .btn-primary { background: var(--accent); color: white; }
+    .btn-primary:hover { background: var(--accent-2); }
+    .btn-secondary { background: #e5e7eb; color: #111827; }
+    .btn-success { background: var(--ok); color: white; }
+    .btn-warn { background: var(--warn); color: white; }
+
+    .muted {
+      color: var(--muted);
+      font-size: 12px;
+      margin-top: 6px;
+    }
+
+    .report-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      gap: 16px;
+      border-bottom: 2px solid #e5e7eb;
+      padding-bottom: 14px;
+      margin-bottom: 16px;
+    }
+
+    .report-title {
+      font-size: 24px;
+      margin: 0 0 4px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: bold;
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+    }
+
+    .report-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+
+    .info-box {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 12px;
+      background: #fff;
+    }
+
+    .info-box h3 {
+      margin: 0 0 8px;
+      font-size: 14px;
+      text-transform: uppercase;
+      color: #374151;
+    }
+
+    .chips {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .chip {
+      background: #f3f4f6;
+      border: 1px solid #e5e7eb;
+      border-radius: 999px;
+      padding: 6px 10px;
+      font-size: 13px;
+    }
+
+    .chip.high { background: #fee2e2; border-color: #fecaca; color: #991b1b; }
+    .chip.medium { background: #ffedd5; border-color: #fed7aa; color: #9a3412; }
+    .chip.low { background: #dcfce7; border-color: #bbf7d0; color: #166534; }
+
+    .list-block {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 14px;
+      margin-bottom: 14px;
+      background: #fff;
+    }
+
+    .list-block h3 {
+      margin: 0 0 10px;
+      font-size: 15px;
+      text-transform: uppercase;
+    }
+
+    .list-block ul {
+      margin: 0;
+      padding-left: 18px;
+      line-height: 1.7;
+    }
+
+    .photo-upload-box {
+      border: 1px dashed #94a3b8;
+      border-radius: 14px;
+      padding: 12px;
+      background: #fff;
+    }
+
+    .photo-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 16px;
+      margin-top: 12px;
+      page-break-inside: auto;
+    }
+
+    .photo-item {
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      overflow: hidden;
+      background: #fff;
+    }
+
+    .photo-item img {
+      display: block;
+      width: 100%;
+      height: 420px;
+      object-fit: cover;
+      background: #f3f4f6;
+    }
+
+    .photo-caption {
+      padding: 10px;
+      font-size: 13px;
+      color: #4b5563;
+      word-break: break-word;
+    }
+
+    .manual-notes-box {
+      border: 1.5px dashed #94a3b8;
+      border-radius: 12px;
+      min-height: 180px;
+      background: #fff;
+      padding: 14px;
+      margin-top: 10px;
+    }
+
+    .manual-notes-lines {
+      min-height: 150px;
+      background-image: linear-gradient(to bottom, transparent 31px, #e5e7eb 32px);
+      background-size: 100% 32px;
+    }
+
+    .signature-wrap {
+      margin-top: 28px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+
+    .signature-box {
+      padding-top: 54px;
+      text-align: center;
+      font-size: 13px;
+    }
+
+    .signature-line {
+      border-top: 1px solid #6b7280;
+      margin-bottom: 8px;
+    }
+
+    .empty {
+      display: grid;
+      place-items: center;
+      min-height: 300px;
+      color: var(--muted);
+      border: 2px dashed #d1d5db;
+      border-radius: 16px;
+      background: linear-gradient(180deg, #fff, #f9fafb);
+      text-align: center;
+      padding: 24px;
+    }
+
+
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(circle at top left, rgba(124, 58, 237, 0.16), transparent 28%),
+        radial-gradient(circle at 85% 8%, rgba(14, 165, 233, 0.16), transparent 24%),
+        linear-gradient(180deg, #0f172a 0%, #111827 18%, #f3f6fb 18%, #eef3f9 100%);
+      z-index: -3;
+    }
+
+    .bg-orb {
+      position: fixed;
+      border-radius: 999px;
+      filter: blur(50px);
+      opacity: .42;
+      z-index: -2;
+      pointer-events: none;
+    }
+
+    .orb-1 { width: 240px; height: 240px; background: rgba(59, 130, 246, 0.30); top: 90px; right: 6%; }
+    .orb-2 { width: 280px; height: 280px; background: rgba(168, 85, 247, 0.22); top: 220px; left: 4%; }
+
+    .hero {
+      margin-bottom: 22px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.4fr) 260px;
+      gap: 20px;
+      padding: 26px 28px;
+      border-radius: 28px;
+      background: linear-gradient(135deg, rgba(15,23,42,.92), rgba(30,41,59,.88));
+      color: #fff;
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: 0 25px 60px rgba(2,6,23,.24);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      inset: auto -80px -100px auto;
+      width: 260px;
+      height: 260px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,.16), transparent 65%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .hero-copy, .hero-side {
+      position: relative;
+      z-index: 2;
+    }
+
+    .floating-print-btn {
+      position: fixed;
+      right: 24px;
+      bottom: 24px;
+      z-index: 9999;
+      min-width: 220px;
+      padding: 14px 18px;
+      border-radius: 999px;
+      box-shadow: 0 18px 40px rgba(15,23,42,.28);
+      background: linear-gradient(135deg, #f59e0b, #d97706);
+      color: #fff;
+      border: 1px solid rgba(255,255,255,.22);
+      cursor: pointer;
+    }
+
+    .floating-print-btn:hover {
+      transform: translateY(-1px);
+      filter: brightness(1.03);
+    }
+
+    .eyebrow, .empty-kicker, .report-kicker {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+
+    .eyebrow { color: #cbd5e1; margin-bottom: 10px; }
+    .hero h1 { margin: 0 0 8px; font-size: 38px; line-height: 1.05; }
+    .hero p { margin: 0; color: rgba(255,255,255,.82); max-width: 760px; }
+    .hero-highlights { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+    .hero-pill {
+      padding: 9px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.08);
+      border: 1px solid rgba(255,255,255,.08);
+      font-size: 13px;
+      color: #e5eefb;
+      backdrop-filter: blur(10px);
+    }
+
+    .hero-side { display: flex; flex-direction: column; justify-content: space-between; gap: 16px; }
+    .mini-stat {
+      padding: 18px;
+      border-radius: 22px;
+      background: linear-gradient(180deg, rgba(255,255,255,.12), rgba(255,255,255,.05));
+      border: 1px solid rgba(255,255,255,.10);
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.08);
+    }
+    .mini-stat-label { display: block; font-size: 12px; color: #bfdbfe; margin-bottom: 6px; text-transform: uppercase; letter-spacing: .08em; }
+    .mini-stat strong { display: block; font-size: 22px; margin-bottom: 4px; }
+    .mini-stat small { color: #cbd5e1; }
+
+    .header h1 { color: #fff; }
+    .header p { color: rgba(255,255,255,.82); }
+
+    .card {
+      background: rgba(255,255,255,.82);
+      backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,.75);
+      border-radius: 26px;
+      box-shadow: 0 20px 60px rgba(15, 23, 42, 0.12);
+    }
+
+    .form-card {
+      padding: 22px;
+      position: sticky;
+      top: 14px;
+      background: linear-gradient(180deg, rgba(255,255,255,.92), rgba(248,250,252,.88));
+    }
+
+    .report-card {
+      padding: 24px;
+      min-height: 85vh;
+      background: linear-gradient(180deg, rgba(255,255,255,.96), rgba(247,250,252,.94));
+    }
+
+    .section {
+      border: 1px solid rgba(148,163,184,.18);
+      border-radius: 20px;
+      padding: 16px;
+      margin-bottom: 14px;
+      background: linear-gradient(180deg, rgba(255,255,255,.96), rgba(248,250,252,.86));
+      box-shadow: inset 0 1px 0 rgba(255,255,255,.7);
+    }
+
+    .section-title {
+      display: inline-flex;
+      align-items: center;
+      padding: 7px 12px;
+      border-radius: 999px;
+      background: linear-gradient(90deg, rgba(37,99,235,.10), rgba(14,165,233,.12));
+      color: #1e3a8a;
+      font-size: 11px;
+      font-weight: 800;
+      margin-bottom: 12px;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    input[type="text"], input[type="date"], select, textarea, input[type="file"] {
+      border: 1px solid #d7deea;
+      border-radius: 14px;
+      background: #fff;
+      transition: .22s ease;
+      box-shadow: 0 4px 14px rgba(15,23,42,.04);
+    }
+    input[type="text"]:focus, input[type="date"]:focus, select:focus, textarea:focus, input[type="file"]:focus {
+      outline: none;
+      border-color: rgba(37,99,235,.55);
+      box-shadow: 0 0 0 4px rgba(59,130,246,.12), 0 12px 28px rgba(37,99,235,.08);
+      transform: translateY(-1px);
+    }
+
+    .checkbox-list {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+    }
+
+    .checkbox-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 12px 13px;
+      border-radius: 16px;
+      background: linear-gradient(180deg, #ffffff, #f8fbff);
+      border: 1px solid #e5edf6;
+      box-shadow: 0 10px 24px rgba(15,23,42,.04);
+      transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+    }
+    .checkbox-item:hover { transform: translateY(-1px); box-shadow: 0 14px 28px rgba(15,23,42,.08); border-color: #c9d9ee; }
+    .checkbox-item input { margin-top: 2px; accent-color: #2563eb; }
+
+    .btn-row { margin-top: 18px; }
+    button {
+      transition: transform .18s ease, box-shadow .18s ease, filter .18s ease;
+    }
+    button:hover { transform: translateY(-1px); filter: saturate(1.02); }
+    .btn-primary, .btn-secondary, .btn-warn {
+      border: 0;
+      border-radius: 14px;
+      padding: 12px 18px;
+      font-weight: 700;
+      letter-spacing: .01em;
+      box-shadow: 0 14px 30px rgba(15,23,42,.12);
+    }
+    .btn-primary { background: linear-gradient(135deg, #2563eb, #0ea5e9); color: white; }
+    .btn-secondary { background: linear-gradient(135deg, #ffffff, #eef4fb); color: #0f172a; }
+    .btn-warn { background: linear-gradient(135deg, #f59e0b, #f97316); color: white; }
+
+    .photo-upload-box {
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(239,246,255,.92), rgba(248,250,252,.95));
+      border: 1px dashed #93c5fd;
+      padding: 14px;
+    }
+
+    .empty {
+      display: grid;
+      place-items: center;
+      min-height: 360px;
+      color: var(--muted);
+      border: 1px dashed #b8cae0;
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at top right, rgba(59,130,246,.12), transparent 25%),
+        radial-gradient(circle at bottom left, rgba(168,85,247,.10), transparent 24%),
+        linear-gradient(180deg, #fff, #f7fafc);
+      text-align: center;
+      padding: 30px;
+    }
+    .empty-kicker { color: #2563eb; margin-bottom: 10px; }
+
+    .report-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 16px;
+      padding: 22px;
+      border-radius: 24px;
+      color: #fff;
+      background: linear-gradient(135deg, #0f172a, #1e293b 55%, #1d4ed8 130%);
+      box-shadow: 0 22px 45px rgba(15,23,42,.18);
+      position: relative;
+      overflow: hidden;
+    }
+    .report-head::after {
+      content: "";
+      position: absolute;
+      right: -40px;
+      top: -40px;
+      width: 160px;
+      height: 160px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(255,255,255,.22), transparent 70%);
+    }
+    .report-title { margin: 6px 0 10px; }
+    .report-kicker { color: #bfdbfe; }
+    .report-meta { text-align: right; font-size: 13px; color: rgba(255,255,255,.88); position: relative; z-index: 1; }
+
+    .badge {
+      display: inline-flex;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.14);
+      border: 1px solid rgba(255,255,255,.18);
+      color: #fff;
+      font-weight: 700;
+      backdrop-filter: blur(10px);
+    }
+
+    .info-box, .list-block {
+      border-radius: 20px;
+      border: 1px solid #e6edf7;
+      background: linear-gradient(180deg, #fff, #f8fbff);
+      box-shadow: 0 14px 30px rgba(15,23,42,.05);
+    }
+    .info-box { padding: 16px; }
+    .list-block { padding: 18px; }
+    .list-block h3, .info-box h3 { margin-top: 0; }
+
+    .chips { display: flex; flex-wrap: wrap; gap: 10px; }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: linear-gradient(180deg, #eff6ff, #e0f2fe);
+      color: #0f172a;
+      border: 1px solid #c8ddf5;
+      font-weight: 600;
+    }
+    .chip.high { background: linear-gradient(180deg, #fee2e2, #fecaca); border-color: #fca5a5; }
+    .chip.medium { background: linear-gradient(180deg, #fef3c7, #fde68a); border-color: #fcd34d; }
+    .chip.low { background: linear-gradient(180deg, #dcfce7, #bbf7d0); border-color: #86efac; }
+
+
+    @media (max-width: 1100px) {
+      .layout { grid-template-columns: 1fr; }
+      .form-card { position: static; }
+      .header { flex-direction: column; }
+      .top-actions { justify-content: flex-start; }
+      .hero { grid-template-columns: 1fr; }
+    }
+
+    @media (max-width: 700px) {
+      .grid, .report-grid, .signature-wrap, .photo-grid, .checkbox-list { grid-template-columns: 1fr; }
+      .hero { padding: 22px 20px; }
+      .hero h1 { font-size: 30px; }
+      .report-head { padding: 18px; }
+      .report-meta { text-align: left; }
+      .floating-print-btn { right: 14px; left: 14px; bottom: 14px; width: calc(100% - 28px); min-width: 0; }
+    }
+
+    
+    @media print {
+      @page { size: A4; margin: 10mm; }
+
+      body {
+        background: #ffffff !important;
+        color: #111827 !important;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      body::before,
+      .bg-orb,
+      .hero,
+      .screen-only,
+      .top-actions,
+      .floating-print-btn,
+      .form-card {
+        display: none !important;
+      }
+
+      .wrap {
+        max-width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+      }
+
+      .report-card {
+        box-shadow: none !important;
+        border: 0 !important;
+        padding: 0 !important;
+        min-height: auto !important;
+        background: #fff !important;
+      }
+
+      .report-header {
+        border-bottom: 2px solid #0f172a !important;
+        padding-bottom: 6px !important;
+        margin-bottom: 10px !important;
+      }
+
+      .report-header h2,
+      .report-title {
+        font-size: 18px !important;
+        font-weight: 800 !important;
+        letter-spacing: .3px !important;
+        color: #0f172a !important;
+      }
+
+      .audit-photos-title,
+      .section-title {
+        display: block !important;
+        margin: 0 0 8px 0 !important;
+        padding: 6px 10px !important;
+        background: #e5eefb !important;
+        color: #0f172a !important;
+        border-left: 4px solid #1d4ed8 !important;
+        border-radius: 6px !important;
+        font-size: 13px !important;
+        font-weight: 800 !important;
+        text-transform: uppercase !important;
+        letter-spacing: .4px !important;
+      }
+
+      .list-block:has(.photo-grid) {
+        padding: 0 !important;
+        border: 0 !important;
+        background: transparent !important;
+        box-shadow: none !important;
+      }
+
+      .photo-grid {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 8px !important;
+        align-items: start !important;
+      }
+
+      .photo-item {
+        height: 120mm !important;
+        display: flex !important;
+        flex-direction: column !important;
+        justify-content: flex-start !important;
+        overflow: hidden !important;
+        break-inside: avoid !important;
+        page-break-inside: avoid !important;
+        border: 1px solid #cbd5e1 !important;
+        border-radius: 8px !important;
+        background: #fff !important;
+        box-shadow: none !important;
+      }
+
+      .photo-item img {
+        width: 100% !important;
+        height: 102mm !important;
+        object-fit: cover !important;
+        border-radius: 0 !important;
+        border-bottom: 1px solid #e5e7eb !important;
+        display: block !important;
+      }
+
+      .photo-caption {
+        min-height: 18mm !important;
+        padding: 5px 7px !important;
+        font-size: 9.5px !important;
+        line-height: 1.15 !important;
+        color: #374151 !important;
+        word-break: break-word !important;
+        background: #f8fafc !important;
+      }
+
+      .photo-caption::before {
+        content: "Evidencia";
+        display: inline-block;
+        margin-right: 6px;
+        padding: 1px 5px;
+        border-radius: 999px;
+        background: #dbeafe;
+        color: #1e3a8a;
+        font-size: 8px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: .3px;
+      }
+
+      .signature-row,
+      .signatures,
+      .signature-block {
+        margin-top: 10mm !important;
+      }
+
+      .signature-block strong,
+      .signature-label {
+        color: #111827 !important;
+      }
+    }
+
+      .wrap { max-width: 100%; padding: 0; }
+      .photo-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+      }
+      .photo-item {
+        break-inside: avoid;
+        page-break-inside: avoid;
+      }
+      .photo-item img {
+        height: 470px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="bg-orb orb-1 screen-only"></div>
+  <div class="bg-orb orb-2 screen-only"></div>
+  <div class="wrap">
+    <div class="hero screen-only">
+      <div class="hero-copy">
+        <div class="eyebrow">Control operativo · limpieza y mantenimiento</div>
+        <h1>Reporte de incidencias</h1>
+        <p>Captura reportes con una interfaz más visual, elegante y dinámica. La vista previa se actualiza al generar el reporte y queda lista para imprimir con un formato más ejecutivo.</p>
+        <div class="hero-highlights">
+          <span class="hero-pill">Fecha automática</span>
+          <span class="hero-pill">Catálogos inteligentes</span>
+          <span class="hero-pill">Vista previa premium</span>
+        </div>
+      </div>
+      <div class="hero-side">
+        <div class="mini-stat">
+          <span class="mini-stat-label">Reporte</span>
+          <strong>Visual y listo</strong>
+          <small>para impresión inmediata</small>
+        </div>
+        <div class="top-actions">
+          <button class="btn-warn" type="button" onclick="imprimirReporte()">Imprimir reporte</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="layout">
+      <div class="card form-card screen-only">
+        <h2>Captura del reporte</h2>
+
+        <div class="section">
+          <div class="section-title">Datos generales</div>
+          <div class="grid">
+            <div>
+              <label for="fecha">Fecha</label>
+              <input type="date" id="fecha" />
+            </div>
+            <div>
+              <label for="alojamiento">Alojamiento</label>
+              <select id="alojamiento"></select>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Personas involucradas</div>
+          <label>Selecciona una o más personas</label>
+          <div class="checkbox-list" id="personasList"></div>
+          <div class="inline" style="margin-top:10px;">
+            <input type="text" id="nuevaPersona" placeholder="Agregar persona" />
+            <button type="button" class="btn-secondary" onclick="agregarOpcion('personas')">Agregar</button>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Motivos del reporte</div>
+          <label>Selecciona uno o más motivos</label>
+          <div class="checkbox-list" id="motivosList"></div>
+          <div class="inline" style="margin-top:10px;">
+            <input type="text" id="nuevoMotivo" placeholder="Agregar motivo" />
+            <button type="button" class="btn-secondary" onclick="agregarOpcion('motivos')">Agregar</button>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Clasificación de la incidencia</div>
+          <label>Selecciona una o más clasificaciones</label>
+          <div class="checkbox-list" id="clasificacionesList"></div>
+          <div class="inline" style="margin-top:10px;">
+            <input type="text" id="nuevaClasificacion" placeholder="Agregar clasificación" />
+            <button type="button" class="btn-secondary" onclick="agregarOpcion('clasificaciones')">Agregar</button>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Nivel y seguimiento</div>
+          <div class="grid">
+            <div>
+              <label for="nivel">Nivel de prioridad</label>
+              <select id="nivel">
+                <option value="Baja">Baja</option>
+                <option value="Media">Media</option>
+                <option value="Alta">Alta</option>
+              </select>
+            </div>
+            <div>
+              <label for="estatus">Estatus</label>
+              <select id="estatus">
+                <option value="Pendiente">Pendiente</option>
+                <option value="Parcialmente resuelto">Parcialmente resuelto</option>
+                <option value="Resuelto">Resuelto</option>
+              </select>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Persona que realizó el reporte</div>
+          <div class="grid-1">
+            <div>
+              <label for="reportante">Nombre de la persona que realizó el reporte</label>
+              <select id="reportante"></select>
+            </div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Fotos / evidencia</div>
+          <div class="photo-upload-box">
+            <label for="fotos">Agregar o cargar fotos</label>
+            <input type="file" id="fotos" accept="image/*" multiple />
+            <div class="muted">Puedes cargar una o varias imágenes. Se mostrarán en la vista previa y en el reporte impreso.</div>
+            <div id="photoPreview" class="photo-grid"></div>
+          </div>
+        </div>
+
+        <div class="section">
+          <div class="section-title">Descripción y observaciones</div>
+          <div class="grid-1">
+            <div>
+              <label for="descripcion">Descripción detallada</label>
+              <textarea id="descripcion" placeholder="Describe qué ocurrió, dónde ocurrió y el contexto."></textarea>
+            </div>
+            <div>
+              <label for="acciones">Acciones realizadas</label>
+              <textarea id="acciones" placeholder="Indica qué se hizo en sitio."></textarea>
+            </div>
+            <div>
+              <label for="seguimiento">Seguimiento requerido</label>
+              <textarea id="seguimiento" placeholder="Indica si requiere mantenimiento, revisión administrativa, compra de insumos, etc."></textarea>
+            </div>
+            
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn-primary" type="button" onclick="generarReporte()">Generar reporte</button>
+          <button class="btn-secondary" type="button" onclick="limpiarFormulario()">Limpiar</button>
+        </div>
+      </div>
+
+      <div class="card report-card">
+        <div id="reportContainer" class="empty">
+          <div>
+            <div class="empty-kicker">Vista previa ejecutiva</div>
+            <h2 style="margin-bottom:8px;">Tu reporte aparecerá aquí</h2>
+            <div>Completa el formulario y pulsa <strong>Generar reporte</strong> para visualizar una versión elegante, lista para imprimir.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="pdfRenderHost" aria-hidden="true" style="position:fixed; left:-10000px; top:0; width:210mm; min-height:297mm; box-sizing:border-box; background:#fff; opacity:1; pointer-events:none; z-index:-1; overflow:visible;"></div>
+
+
+    <button class="floating-print-btn screen-only" type="button" onclick="imprimirReporte()">🖨️ Imprimir reporte</button>
+
+  <script>
+    const personalCatalogo = [
+      { nombre: 'Claudia Carreón', puesto: 'Administrativo' },
+      { nombre: 'Andrés Carreón', puesto: 'Administrativo' },
+      { nombre: 'Mariana Durán', puesto: 'Administrativo' },
+      { nombre: 'Damariz Abigail Álvarez Ibarra', puesto: 'Supervisión' },
+      { nombre: 'Juana María Silva Maldonado', puesto: 'Limpieza' },
+      { nombre: 'Francisco López Valdés', puesto: 'Limpieza' },
+      { nombre: 'Alma Abigail Robledo Gutiérrez', puesto: 'Limpieza' },
+      { nombre: 'Brenda Esmeralda Robledo Gutiérrez', puesto: 'Limpieza' },
+      { nombre: 'Gabriela Judith Robleto Gutiérrez', puesto: 'Limpieza' }
+    ];
+
+    const clasificacionesPorMotivo = {
+      'Limpieza': [
+        'Baño sucio',
+        'Sábanas sucias',
+        'Basura detectada',
+        'Plaga o insectos'
+      ],
+      'Mantenimiento': [
+        'Fuga de agua',
+        'Falla eléctrica',
+        'Falla de electrodomésticos',
+        'Ausencia de controles'
+      ],
+      'Insumos': [
+        'Toallas faltantes',
+        'Pilas faltantes',
+        'Productos de limpieza faltantes'
+      ]
+    };
+
+    const propiedadesCatalogo = [
+      { nombre: 'Cumbres', desde: 1, hasta: 14 },
+      { nombre: 'Baja California', desde: 1, hasta: 10 },
+      { nombre: 'Oaxaca', desde: 1, hasta: 8 },
+      { nombre: 'José Cárdenas', desde: 1, hasta: 6 },
+      { nombre: 'Matamoros', desde: 1, hasta: 10 }
+    ];
+
+    const catalogos = {
+      personas: personalCatalogo.map(p => p.nombre),
+      motivos: Object.keys(clasificacionesPorMotivo),
+      alojamientos: propiedadesCatalogo.flatMap(prop => {
+        const items = [];
+        for (let i = prop.desde; i <= prop.hasta; i += 1) items.push(`${prop.nombre} #${i}`);
+        return items;
+      }),
+      clasificaciones: Array.from(new Set(Object.values(clasificacionesPorMotivo).flat()))
+    };
+
+    let fotosData = [];
+
+    function init() {
+      renderCheckboxList('personasList', catalogos.personas, 'personas', true);
+      renderCheckboxList('motivosList', catalogos.motivos, 'motivos');
+      renderCheckboxList('clasificacionesList', catalogos.clasificaciones, 'clasificaciones');
+      renderSelect('alojamiento', catalogos.alojamientos);
+      renderReportanteSelect();
+      document.getElementById('fecha').value = getTodayLocalISO();
+      document.getElementById('fotos').addEventListener('change', manejarFotos);
+      document.getElementById('motivosList').addEventListener('change', actualizarClasificacionesPorMotivo);
+    }
+
+    function renderSelect(id, options) {
+      const select = document.getElementById(id);
+      select.innerHTML = options.map(opt => `<option value="${escapeHtml(opt)}">${escapeHtml(opt)}</option>`).join('');
+    }
+
+    function renderReportanteSelect() {
+      const select = document.getElementById('reportante');
+      const administrativos = personalCatalogo.filter(p => p.puesto === 'Administrativo').map(p => p.nombre);
+      const options = ['Seleccionar persona', ...administrativos];
+      select.innerHTML = options.map((opt, idx) => `<option value="${idx === 0 ? '' : escapeHtml(opt)}">${escapeHtml(opt)}</option>`).join('');
+    }
+
+    function renderCheckboxList(containerId, items, name, includeRole = false) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = items.map((item) => {
+        const persona = includeRole ? personalCatalogo.find(p => p.nombre === item) : null;
+        const label = persona ? `${persona.nombre} — ${persona.puesto}` : item;
+        return `
+          <label class="checkbox-item">
+            <input type="checkbox" name="${name}" value="${escapeHtml(item)}">
+            <span>${escapeHtml(label)}</span>
+          </label>
+        `;
+      }).join('');
+    }
+
+    function getTodayLocalISO() {
+      const now = new Date();
+      const offset = now.getTimezoneOffset() * 60000;
+      return new Date(now.getTime() - offset).toISOString().split('T')[0];
+    }
+
+    function actualizarClasificacionesPorMotivo() {
+      const motivosSeleccionados = getChecked('motivos');
+      const disponibles = motivosSeleccionados.length
+        ? Array.from(new Set(motivosSeleccionados.flatMap(m => clasificacionesPorMotivo[m] || [])))
+        : catalogos.clasificaciones;
+
+      const seleccionadasPrevias = getChecked('clasificaciones');
+      renderCheckboxList('clasificacionesList', disponibles, 'clasificaciones');
+      document.querySelectorAll('input[name="clasificaciones"]').forEach(el => {
+        if (seleccionadasPrevias.includes(el.value)) el.checked = true;
+      });
+    }
+
+    function agregarOpcion(tipo) {
+      const map = {
+        personas: 'nuevaPersona',
+        motivos: 'nuevoMotivo',
+        clasificaciones: 'nuevaClasificacion'
+      };
+      const input = document.getElementById(map[tipo]);
+      const valor = input.value.trim();
+      if (!valor) return;
+      if (!catalogos[tipo].includes(valor)) catalogos[tipo].push(valor);
+
+      if (tipo === 'personas') {
+        renderCheckboxList('personasList', catalogos.personas, 'personas', true);
+        renderReportanteSelect();
+      }
+      if (tipo === 'motivos') renderCheckboxList('motivosList', catalogos.motivos, 'motivos');
+      if (tipo === 'clasificaciones') renderCheckboxList('clasificacionesList', catalogos.clasificaciones, 'clasificaciones');
+
+      input.value = '';
+    }
+
+    function getChecked(name) {
+      return Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(el => el.value);
+    }
+
+    function formatDate(dateStr) {
+      if (!dateStr) return '-';
+      const [y, m, d] = dateStr.split('-');
+      return `${d}/${m}/${y}`;
+    }
+
+    function nivelClass(nivel) {
+      const n = (nivel || '').toLowerCase();
+      if (n === 'alta') return 'high';
+      if (n === 'media') return 'medium';
+      return 'low';
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replaceAll('&', '&amp;')
+        .replaceAll('<', '&lt;')
+        .replaceAll('>', '&gt;')
+        .replaceAll('"', '&quot;')
+        .replaceAll("'", '&#39;');
+    }
+
+    function manejarFotos(event) {
+      const files = Array.from(event.target.files || []);
+      if (!files.length) {
+        fotosData = [];
+        renderPhotoPreview();
+        return;
+      }
+
+      Promise.all(files.map(file => new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve({ name: file.name, src: reader.result });
+        reader.readAsDataURL(file);
+      }))).then(results => {
+        fotosData = results;
+        renderPhotoPreview();
+      });
+    }
+
+    function renderPhotoPreview() {
+      const cont = document.getElementById('photoPreview');
+      if (!fotosData.length) {
+        cont.innerHTML = '';
+        return;
+      }
+      cont.innerHTML = fotosData.map(f => `
+        <div class="photo-item">
+          <img src="${f.src}" alt="${escapeHtml(f.name)}">
+          <div class="photo-caption">Foto 1 – ${escapeHtml(f.name)}</div>
+        </div>
+      `).join('');
+    }
+
+    function getFormData() {
+      return {
+        fecha: document.getElementById('fecha').value,
+        alojamiento: document.getElementById('alojamiento').value,
+        personas: getChecked('personas'),
+        motivos: getChecked('motivos'),
+        clasificaciones: getChecked('clasificaciones'),
+        nivel: document.getElementById('nivel').value,
+        estatus: document.getElementById('estatus').value,
+        reportante: document.getElementById('reportante').value,
+        descripcion: document.getElementById('descripcion').value.trim(),
+        acciones: document.getElementById('acciones').value.trim(),
+        seguimiento: document.getElementById('seguimiento').value.trim(),
+        fotos: fotosData
+      };
+    }
+
+    function generarBloqueFotos(fotos) {
+      if (!fotos || !fotos.length) return '';
+      return `
+        <div class="list-block">
+          <h3>Evidencia fotográfica</h3>
+          <div class="photo-grid">
+            ${fotos.map(f => `
+              <div class="photo-item">
+                <img src="${f.src}" alt="${escapeHtml(f.name)}">
+                <div class="photo-caption">Foto 2 – ${escapeHtml(f.name)}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      `;
+    }
+
+    function generarReporteHTML(data) {
+      const personas = data.personas.length ? data.personas : ['Sin especificar'];
+      const motivos = data.motivos.length ? data.motivos : ['Sin especificar'];
+      const clasificaciones = data.clasificaciones.length ? data.clasificaciones : ['Sin especificar'];
+      const reportante = data.reportante || 'Sin especificar';
+
+      return `
+        <div class="report-head">
+          <div>
+            <div class="report-kicker">Formato operativo</div>
+            <h1 class="report-title">Reporte de incidencia de limpieza</h1>
+            <div class="badge">${escapeHtml(data.estatus)}</div>
+          </div>
+          <div class="report-meta">
+            <div><strong>Fecha:</strong> ${escapeHtml(formatDate(data.fecha))}</div>
+            <div><strong>Alojamiento:</strong> ${escapeHtml(data.alojamiento || '-')}</div>
+          </div>
+        </div>
+
+        <div class="report-grid">
+          <div class="info-box">
+            <h3>Datos operativos</h3>
+            <div><strong>Nivel de prioridad:</strong> <span class="chip ${nivelClass(data.nivel)}">${escapeHtml(data.nivel)}</span></div>
+            <div><strong>Reporte realizado por:</strong> ${escapeHtml(data.reportante || 'Sin especificar')}</div>
+          </div>
+          <div class="info-box">
+            <h3>Personas involucradas</h3>
+            <div class="chips">${personas.map(x => `<span class="chip">${escapeHtml(x)}</span>`).join('')}</div>
+          </div>
+        </div>
+
+        <div class="list-block">
+          <h3>Motivos del reporte</h3>
+          <div class="chips">${motivos.map(x => `<span class="chip">${escapeHtml(x)}</span>`).join('')}</div>
+        </div>
+
+        <div class="list-block">
+          <h3>Clasificación de la incidencia</h3>
+          <ul>${clasificaciones.map(x => `<li>${escapeHtml(x)}</li>`).join('')}</ul>
+        </div>
+
+        <div class="list-block">
+          <h3>Descripción detallada</h3>
+          <div>${escapeHtml(data.descripcion || 'Sin descripción').replaceAll('\n', '<br>')}</div>
+        </div>
+
+        <div class="list-block">
+          <h3>Acciones realizadas</h3>
+          <div>${escapeHtml(data.acciones || 'Sin acciones registradas').replaceAll('\n', '<br>')}</div>
+        </div>
+
+        <div class="list-block">
+          <h3>Seguimiento requerido</h3>
+          <div>${escapeHtml(data.seguimiento || 'Sin seguimiento registrado').replaceAll('\n', '<br>')}</div>
+        </div>
+
+
+        <div class="list-block">
+          <h3>Acuerdos</h3>
+          <div class="manual-notes-box">
+            <div class="manual-notes-lines"></div>
+          </div>
+        </div>
+
+        ${generarBloqueFotos(data.fotos)}
+
+        <div class="signature-wrap">
+          <div class="signature-box">
+            <div class="signature-line"></div>
+            <div><strong>${escapeHtml(reportante)}</strong></div>
+            <div>Persona que realizó el reporte</div>
+          </div>
+          <div class="signature-box">
+            <div class="signature-line"></div>
+            <div><strong>${(personas || []).map(p => escapeHtml(p)).join(", ")}</strong></div>
+            <div>Personas involucradas</div>
+          </div>
+        </div>
+      `;
+    }
+
+    function generarReporte() {
+      const data = getFormData();
+      const reportContainer = document.getElementById('reportContainer');
+      reportContainer.className = '';
+      reportContainer.innerHTML = generarReporteHTML(data);
+    }
+
+    function buildStandaloneHTML(data) {
+      const contenido = generarReporteHTML(data);
+      return `<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reporte de incidencia</title>
+  <style>
+    @page { size: A4; margin: 16mm; }
+    body{font-family:Arial,Helvetica,sans-serif;margin:0;color:#111827;background:#fff;padding:0}
+    .report-head{display:flex;justify-content:space-between;gap:16px;border-bottom:2px solid #e5e7eb;padding-bottom:14px;margin-bottom:16px}
+    .report-title{font-size:24px;margin:0 0 4px}.badge{display:inline-block;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:bold;background:#eff6ff;color:#1d4ed8;border:1px solid #bfdbfe}
+    .report-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:16px}
+    .info-box,.list-block{border:1px solid #d9e1ec;border-radius:12px;padding:14px;background:#fff}.info-box h3,.list-block h3{margin:0 0 10px;font-size:15px;text-transform:uppercase}
+    .chips{display:flex;gap:8px;flex-wrap:wrap}.chip{background:#f3f4f6;border:1px solid #e5e7eb;border-radius:999px;padding:6px 10px;font-size:13px}.chip.high{background:#fee2e2;border-color:#fecaca;color:#991b1b}.chip.medium{background:#ffedd5;border-color:#fed7aa;color:#9a3412}.chip.low{background:#dcfce7;border-color:#bbf7d0;color:#166534}
+    ul{line-height:1.7}.photo-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}.photo-item{border:1px solid #d9e1ec;border-radius:12px;overflow:hidden;background:#fff;break-inside:avoid;page-break-inside:avoid}.photo-item img{display:block;width:100%;height:470px;object-fit:cover;background:#f3f4f6}.photo-caption{padding:10px;font-size:13px;color:#4b5563;word-break:break-word}
+    .manual-notes-box{border:1.5px dashed #94a3b8;border-radius:12px;min-height:180px;background:#fff;padding:14px;margin-top:10px}
+    .manual-notes-lines{min-height:150px;background-image:linear-gradient(to bottom, transparent 31px, #e5e7eb 32px);background-size:100% 32px}
+    .signature-wrap{margin-top:28px;display:grid;grid-template-columns:1fr 1fr;gap:30px}.signature-box{padding-top:54px;text-align:center;font-size:13px}.signature-line{border-top:1px solid #6b7280;margin-bottom:8px}
+    @media (max-width:700px){.report-grid,.signature-wrap,.photo-grid{grid-template-columns:1fr}}
+  </style>
+</head>
+<body>${contenido}</body>
+</html>`;
+    }
+
+    function sanitizeFilePart(value, fallback = 'dato') {
+      const clean = String(value || fallback)
+        .normalize('NFD')
+        .replace(/[̀-ͯ]/g, '')
+        .replace(/[^a-zA-Z0-9]+/g, '_')
+        .replace(/^_+|_+$/g, '')
+        .slice(0, 50);
+      return clean || fallback;
+    }
+
+    function construirNombreArchivo(data) {
+      const fecha = sanitizeFilePart(data.fecha || 'sin_fecha');
+      const alojamiento = sanitizeFilePart(data.alojamiento || 'alojamiento');
+      const persona = sanitizeFilePart((data.personas && data.personas[0]) || data.reportante || 'persona');
+      const motivo = sanitizeFilePart((data.motivos && data.motivos[0]) || 'motivo');
+      return `reporte_${fecha}_${alojamiento}_${persona}_${motivo}.pdf`;
+    }
+
+    function esperarImagenes(container) {
+      const images = Array.from(container.querySelectorAll('img'));
+      if (!images.length) return Promise.resolve();
+      return Promise.all(images.map(img => {
+        if (img.complete && img.naturalWidth > 0) return Promise.resolve();
+        return new Promise(resolve => {
+          const done = () => resolve();
+          img.addEventListener('load', done, { once: true });
+          img.addEventListener('error', done, { once: true });
+        });
+      }));
+    }
+
+    async function descargarPDF() {
+      const data = getFormData();
+      const nombre = construirNombreArchivo(data);
+      generarReporte();
+
+      const originalScroll = window.scrollY;
+      const host = document.getElementById('pdfRenderHost');
+
+      try {
+        if (!window.html2pdf) {
+          await cargarHtml2Pdf();
+        }
+
+        host.innerHTML = `<div style="width:210mm; min-height:297mm; padding:16mm; box-sizing:border-box; background:#ffffff; overflow:visible;">${generarReporteHTML(data)}</div>`;
+        await esperarImagenes(host);
+        await new Promise(resolve => setTimeout(resolve, 300));
+
+        await window.html2pdf().set({
+          margin: 0,
+          filename: nombre,
+          image: { type: 'jpeg', quality: 0.98 },
+          html2canvas: {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: '#ffffff',
+            scrollX: 0,
+            scrollY: 0,
+            windowWidth: Math.max(host.firstElementChild ? host.firstElementChild.scrollWidth : 794, 794),
+            windowHeight: Math.max(host.firstElementChild ? host.firstElementChild.scrollHeight : 1123, 1123)
+          },
+          jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
+          pagebreak: { mode: ['css', 'legacy'] }
+        }).from(host.firstElementChild).save();
+      } catch (error) {
+        console.error(error);
+        alert('No se pudo generar el PDF automáticamente.');
+      } finally {
+        host.innerHTML = '';
+        window.scrollTo(0, originalScroll);
+      }
+    }
+
+    function cargarHtml2Pdf() {
+      return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js';
+        script.onload = resolve;
+        script.onerror = reject;
+        document.head.appendChild(script);
+      });
+    }
+
+    function imprimirReporte() {
+      const data = getFormData();
+      generarReporte();
+
+      const html = buildStandaloneHTML(data);
+      let iframe = document.getElementById('printFrame');
+
+      if (!iframe) {
+        iframe = document.createElement('iframe');
+        iframe.id = 'printFrame';
+        iframe.setAttribute('aria-hidden', 'true');
+        iframe.style.position = 'fixed';
+        iframe.style.right = '0';
+        iframe.style.bottom = '0';
+        iframe.style.width = '1px';
+        iframe.style.height = '1px';
+        iframe.style.border = '0';
+        iframe.style.opacity = '0';
+        iframe.style.pointerEvents = 'none';
+        document.body.appendChild(iframe);
+      }
+
+      const frameWin = iframe.contentWindow;
+      const frameDoc = iframe.contentDocument || (frameWin && frameWin.document);
+
+      if (!frameDoc || !frameWin) {
+        alert('No se pudo preparar la impresión en este navegador.');
+        return;
+      }
+
+      frameDoc.open();
+      frameDoc.write(html);
+      frameDoc.close();
+
+      const lanzarImpresion = () => {
+        const imgs = Array.from(frameDoc.images || []);
+        const imprimirAhora = () => {
+          setTimeout(() => {
+            try {
+              frameWin.focus();
+              frameWin.print();
+            } catch (error) {
+              console.error(error);
+              alert('No se pudo abrir la impresión automáticamente.');
+            }
+          }, 250);
+        };
+
+        if (!imgs.length) {
+          imprimirAhora();
+          return;
+        }
+
+        Promise.all(imgs.map(img => {
+          if (img.complete && img.naturalWidth > 0) return Promise.resolve();
+          return new Promise(resolve => {
+            const done = () => resolve();
+            img.addEventListener('load', done, { once: true });
+            img.addEventListener('error', done, { once: true });
+          });
+        })).then(imprimirAhora);
+      };
+
+      if (frameDoc.readyState === 'complete') {
+        lanzarImpresion();
+      } else {
+        iframe.onload = () => {
+          iframe.onload = null;
+          lanzarImpresion();
+        };
+      }
+    }
+
+    function limpiarFormulario() {
+      document.querySelectorAll('input[type="checkbox"]').forEach(el => el.checked = false);
+      document.querySelectorAll('textarea').forEach(el => el.value = '');
+      document.getElementById('nivel').value = 'Baja';
+      document.getElementById('estatus').value = 'Pendiente';
+      document.getElementById('fecha').value = getTodayLocalISO();
+      document.getElementById('reportante').value = '';
+      document.getElementById('fotos').value = '';
+      fotosData = [];
+      renderPhotoPreview();
+      document.getElementById('reportContainer').className = 'empty';
+      document.getElementById('reportContainer').innerHTML = `
+        <div>
+          <div class="empty-kicker">Vista previa ejecutiva</div>
+          <h2 style="margin-bottom:8px;">Tu reporte aparecerá aquí</h2>
+          <div>Completa el formulario y pulsa <strong>Generar reporte</strong> para visualizar una versión elegante, lista para imprimir.</div>
+        </div>
+      `;
+    }
+
+    init();
+  </script>
+</body>
+</html>
